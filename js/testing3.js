@@ -80,3 +80,5 @@ function llenarSelect(){
         year.appendChild(opcion)
     }
 }
+
+console.log(datosBusqueda)

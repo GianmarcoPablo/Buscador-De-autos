@@ -4,17 +4,14 @@ const marca = document.querySelector("#marca")
 const minimo = document.querySelector("#minimo")
 const maximo = document.querySelector("#maximo")
 const puertas = document.querySelector("#puertas")
-const tranmision = document.querySelector("#tranmision")
+const transmision = document.querySelector("#transmision")
 const color = document.querySelector("#color")
 
 //contenedor para los resultados
 
 const resultado = document.querySelector("#resultado")
-
 const max = new Date().getFullYear()
 const min = max - 13
-
-//generar un objeto con la busqueda
 
 const datosBusqueda = {
     marca : "",
@@ -22,14 +19,12 @@ const datosBusqueda = {
     minimo : "",
     maximo : "",
     puertas : "",
-    tranmision : "",
+    transmision : "",
     color : "",
 }
 
-
-//eventos
-cargarEvenlisteners()
-function cargarEvenlisteners(){
+cargarEventListeners()
+function cargarEventListeners(){
     document.addEventListener("DOMContentLoaded",()=>{
         mostrarAutos()
         llenarSelect()
@@ -49,23 +44,20 @@ function cargarEvenlisteners(){
     puertas.addEventListener("change", (e)=>{
         datosBusqueda.puertas = e.target.value
     })
-    tranmision.addEventListener("change", (e)=>{
-        datosBusqueda.tranmision = e.target.value
+    transmision.addEventListener("change",(e)=>{
+        datosBusqueda.transmision = e.target.value
     })
     color.addEventListener("change", (e)=>{
         datosBusqueda.color = e.target.value
     })
-
 }
 
-// funciones
 function mostrarAutos(){
     autos.forEach(auto=>{
-        const {marca,modelo, year, puertas, tranmision, precio, color} = auto
+        const {marca,modelo, year, puertas, transmision, precio, color} = auto
         const autoHTML = document.createElement("p")
         autoHTML.textContent = `
-            ${marca} ${modelo} - ${year} - ${puertas} Puertas - Transmisión: ${tranmision} - Precio: ${precio} - Color: ${color}
-
+            ${marca} ${modelo} - ${year} - ${puertas} Puertas - transmision: ${transmision} - Precio: ${precio} - Color: ${color}
 
         `;
         resultado.appendChild(autoHTML)
@@ -74,9 +66,11 @@ function mostrarAutos(){
 
 function llenarSelect(){
     for(let i = max; i >= min; i--){
-        const opcion = document.createElement("option")
-        opcion.value = i
-        opcion.textContent = i
-        year.appendChild(opcion)
+        const option  = document.createElement("option")
+        option.textContent = i
+        option.value = i
+        year.appendChild(option)
     }
 }
+
+console.log(datosBusqueda)
