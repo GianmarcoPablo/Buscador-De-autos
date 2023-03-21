@@ -1,4 +1,5 @@
-//variables
+const resultado = document.querySelector("#resultado")
+
 const year = document.querySelector("#year")
 const marca = document.querySelector("#marca")
 const minimo = document.querySelector("#minimo")
@@ -7,9 +8,6 @@ const puertas = document.querySelector("#puertas")
 const transmision = document.querySelector("#transmision")
 const color = document.querySelector("#color")
 
-//contenedor para los resultados
-
-const resultado = document.querySelector("#resultado")
 const max = new Date().getFullYear()
 const min = max - 13
 
@@ -23,17 +21,19 @@ const datosBusqueda = {
     color : "",
 }
 
-cargarEventListeners()
-function cargarEventListeners(){
+cargarEvenlisteners()
+function cargarEvenlisteners(){
     document.addEventListener("DOMContentLoaded",()=>{
-        mostrarAutos()
+        mostrarAutos(autos)
         llenarSelect()
     })
     marca.addEventListener("change", (e)=>{
         datosBusqueda.marca = e.target.value
+        filtrarAuto()
     })
     year.addEventListener("change", (e)=>{
-        datosBusqueda.year = e.target.value
+        datosBusqueda.year = parseInt( e.target.value )
+        filtrarAuto()
     })
     minimo.addEventListener("change", (e)=>{
         datosBusqueda.minimo = e.target.value
@@ -51,26 +51,55 @@ function cargarEventListeners(){
         datosBusqueda.color = e.target.value
     })
 }
+console.log(datosBusqueda)
 
-function mostrarAutos(){
+function mostrarAutos(autos){
+    limpiarHTML()
     autos.forEach(auto=>{
-        const {marca,modelo, year, puertas, transmision, precio, color} = auto
+        const {marca,modelo, year, puertas, tranmision, precio, color} = auto
         const autoHTML = document.createElement("p")
         autoHTML.textContent = `
-            ${marca} ${modelo} - ${year} - ${puertas} Puertas - transmision: ${transmision} - Precio: ${precio} - Color: ${color}
-
-        `;
+        ${marca} ${modelo} - ${year} - ${puertas} Puertas - transmision: ${transmision} - Precio: ${precio} - Color: ${color}
+        `
         resultado.appendChild(autoHTML)
     })
 }
 
-function llenarSelect(){
-    for(let i = max; i >= min; i--){
-        const option  = document.createElement("option")
-        option.textContent = i
-        option.value = i
-        year.appendChild(option)
+function limpiarHTML(){
+    while(resultado.firstChild){
+        resultado.removeChild(resultado.firstChild)
     }
 }
 
-console.log(datosBusqueda)
+function llenarSelect(){
+    for(let i = max; i >= min; i--){
+        const opcion = document.createElement("option")
+        opcion.value = i
+        opcion.textContent = i
+        year.appendChild(opcion)
+    }
+}
+
+
+
+function filtrarAuto(){
+    const resultado = autos.filter( filtrarMarca ).filter( filtrarYear )
+    // console.log(resultado)
+    mostrarAutos(resultado)
+}
+
+function filtrarMarca(auto){
+    const {marca} = datosBusqueda
+    if(marca){
+        return auto.marca === marca
+    }
+    return auto;
+}
+
+function filtrarYear(auto){
+    const {year} = datosBusqueda
+    if(year){
+        return auto.year === year
+    }
+    return auto;
+}

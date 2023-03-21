@@ -4,7 +4,7 @@ const marca = document.querySelector("#marca")
 const minimo = document.querySelector("#minimo")
 const maximo = document.querySelector("#maximo")
 const puertas = document.querySelector("#puertas")
-const transmision = document.querySelector("#transmision")
+const tranmision = document.querySelector("#tranmision")
 const color = document.querySelector("#color")
 
 //contenedor para los resultados
@@ -14,62 +14,68 @@ const resultado = document.querySelector("#resultado")
 const max = new Date().getFullYear()
 const min = max - 13
 
-//generar un objeto con la busqueda
-
 const datosBusqueda = {
-    marca : "",
-    year : "",
-    minimo : "",
-    maximo : "",
-    puertas : "",
-    transmision : "",
-    color : "",
+    marca: "",
+    year: "",
+    minimo: "",
+    maximo: "",
+    puertas: "",
+    tranmision: "",
+    color: "",
 }
 
-
-//eventos
 cargarEvenlisteners()
 function cargarEvenlisteners(){
     document.addEventListener("DOMContentLoaded",()=>{
-        mostrarAutos()
+        mostrarAutos(autos)
         llenarSelect()
     })
-    marca.addEventListener("change", (e)=>{
+    marca.addEventListener("change",(e)=>{
         datosBusqueda.marca = e.target.value
+        filtrarAuto()
     })
-    year.addEventListener("change", (e)=>{
-        datosBusqueda.year = e.target.value
+    year.addEventListener("change",(e)=>{
+        datosBusqueda.year = parseInt(e.target.value) 
+        filtrarAuto()
     })
-    minimo.addEventListener("change", (e)=>{
+    minimo.addEventListener("change",(e)=>{
         datosBusqueda.minimo = e.target.value
+        filtrarAuto()
     })
-    maximo.addEventListener("change", (e)=>{
+    maximo.addEventListener("change",(e)=>{
         datosBusqueda.maximo = e.target.value
+        filtrarAuto()
     })
-    puertas.addEventListener("change", (e)=>{
-        datosBusqueda.puertas = e.target.value
+    puertas.addEventListener("change",(e)=>{
+        datosBusqueda.puertas = parseInt(e.target.value) 
+        filtrarAuto()
     })
-    transmision.addEventListener("change",(e)=>{
-        datosBusqueda.transmision = e.target.value
+    tranmision.addEventListener("change",(e)=>{
+        datosBusqueda.tranmision = e.target.value
+        filtrarAuto()
     })
-    color.addEventListener("change", (e)=>{
+    color.addEventListener("change",(e)=>{
         datosBusqueda.color = e.target.value
+        filtrarAuto()
     })
-
 }
 
-// funciones
-function mostrarAutos(){
+function mostrarAutos(autos){
+    limpiarHTML()
     autos.forEach(auto=>{
         const {marca,modelo, year, puertas, tranmision, precio, color} = auto
         const autoHTML = document.createElement("p")
         autoHTML.textContent = `
-            ${marca} ${modelo} - ${year} - ${puertas} Puertas - Transmisión: ${tranmision} - Precio: ${precio} - Color: ${color}
-
-
-        `;
+            ${marca} ${modelo} - ${year} - ${puertas} Puertas - transmision: ${tranmision} - Precio: ${precio} - Color: ${color}
+        `
         resultado.appendChild(autoHTML)
     })
+}
+
+function limpiarHTML(){
+    while(resultado.firstChild){
+        resultado.removeChild(resultado.firstChild)
+    }
 }
 
 function llenarSelect(){
@@ -81,4 +87,73 @@ function llenarSelect(){
     }
 }
 
-console.log(datosBusqueda)
+function filtrarAuto(){
+    const resultado = autos.filter(filtrarMarca).filter( filtrarYear).filter(filtrarMinimo).filter(filtrarMaximo).filter(filtarPuertas).filter(filtrarTransmision).filter(filtrarColor)
+
+    if(resultado.length){
+        mostrarAutos(resultado)
+    }else{
+        noResultado()
+    }
+}
+
+function noResultado(){
+    limpiarHTML()
+    const noResultado = document.createElement("div")
+    noResultado.classList.add("alerta","error")
+    noResultado.textContent = "No hay resultados, Intenta con otras opciones"
+    resultado.appendChild(noResultado)
+}
+
+function filtrarMarca(auto){
+    const {marca} = datosBusqueda
+    if(marca){
+        return auto.marca === marca
+    }
+    return auto
+}
+
+function filtrarYear(auto){
+    const {year} = datosBusqueda
+    if(year){
+        return auto.year === year
+    }
+    return auto;
+}
+function filtrarMinimo(auto){
+    const {minimo}= datosBusqueda
+    if(minimo){
+        return auto.precio >= minimo
+    }
+    return auto
+}
+
+function filtrarMaximo(auto){
+    const {maximo}= datosBusqueda
+    if(maximo){
+        return auto.precio <= maximo
+    }
+    return auto
+}
+
+function filtarPuertas(auto){
+    const {puertas} = datosBusqueda
+    if(puertas){
+        return auto.puertas === puertas
+    }
+    return auto
+}
+function filtrarTransmision(auto){
+    const {tranmision} = datosBusqueda
+    if(tranmision){
+        return auto.tranmision === tranmision
+    }
+    return auto
+}
+function filtrarColor(auto){
+    const {color} = datosBusqueda
+    if(color){
+        return auto.color === color
+    }
+    return auto
+}
