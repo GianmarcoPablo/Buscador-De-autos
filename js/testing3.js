@@ -101,7 +101,7 @@ function noResultado(){
     limpiarHTML()
     const noResultado = document.createElement("div")
     noResultado.classList.add("alerta","error")
-    noResultado.textContent = "No hay resultados, Intenta con otras opciones"
+    noResultado.textContent = "No hay resultados"
     resultado.appendChild(noResultado)
 }
 

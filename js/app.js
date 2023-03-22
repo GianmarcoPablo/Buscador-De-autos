@@ -12,13 +12,13 @@ const max = new Date().getFullYear()
 const min = max - 13
 
 const datosBusqueda = {
-    year: "",
     marca: "",
+    year: "",
     minimo: "",
     maximo: "",
     puertas: "",
     tranmision: "",
-    color: "",
+    color: ""
 }
 
 cargarEventListeners()
@@ -27,45 +27,43 @@ function cargarEventListeners(){
         mostrarAutos(autos)
         llenarSelect()
     })
-    year.addEventListener("change",(e)=>{
-        datosBusqueda.year = parseInt(e.target.value)
-        filtrarAuto()
-    })
-    marca.addEventListener("change",(e)=>{
+    marca.addEventListener("change",e=>{
         datosBusqueda.marca = e.target.value
         filtrarAuto()
     })
-    minimo.addEventListener("change",(e)=>{
+    year.addEventListener("change",e=>{
+        datosBusqueda.year = parseInt(e.target.value)
+        filtrarAuto()
+    })
+    minimo.addEventListener("change",e=>{
         datosBusqueda.minimo = e.target.value
         filtrarAuto()
     })
-    maximo.addEventListener("change",(e)=>{
+    maximo.addEventListener("change",e=>{
         datosBusqueda.maximo = e.target.value
         filtrarAuto()
     })
-    puertas.addEventListener("change",(e)=>{
+    puertas.addEventListener("change",e=>{
         datosBusqueda.puertas = parseInt(e.target.value)
         filtrarAuto()
     })
-    tranmision.addEventListener("change",(e)=>{
+    tranmision.addEventListener("change",e=>{
         datosBusqueda.tranmision = e.target.value
         filtrarAuto()
     })
-    color.addEventListener("change",(e)=>{
+    color.addEventListener("change",e=>{
         datosBusqueda.color = e.target.value
         filtrarAuto()
     })
 }
 
-
-
 function mostrarAutos(autos){
     limpiarHTML()
     autos.forEach(auto=>{
-        const {marca,modelo, year, puertas, tranmision, precio, color} = auto
+        const {marca,modelo,year,puertas,tranmision,color,precio} = auto
         const autoHTML = document.createElement("p")
         autoHTML.textContent = `
-        ${marca} ${modelo} - ${year} - ${puertas} Puertas - transmision: ${tranmision} - Precio: ${precio} - Color: ${color}
+            ${marca} ${modelo} - ${year} - ${puertas} Puertas - Transmision: ${tranmision} - Precio: ${precio} - Color: ${color}
         `
         resultado.appendChild(autoHTML)
     })
@@ -79,15 +77,15 @@ function limpiarHTML(){
 
 function llenarSelect(){
     for(let i = max; i >= min; i--){
-        const opcion = document.createElement("option")
-        opcion.textContent = i
-        opcion.value = i
-        year.appendChild(opcion)
+        const option = document.createElement("option")
+        option.value = i
+        option.textContent = i
+        year.appendChild(option)
     }
 }
 
 function filtrarAuto(){
-    const resultado = autos.filter(filtrarMarca).filter(filtrarYear).filter(filtrarMinimo).filter(filtrarMaximo).filter(filtarPuertas).filter(filtrarTransmision).filter(filtrarColor)
+    const resultado = autos.filter(filtrarMarca).filter(filtrarYear).filter(filtrarMinimo).filter(filtrarMaximo).filter(filtrarPuertas).filter(filtrarTransmision).filter(filtrarColor)
     if(resultado.length){
         mostrarAutos(resultado)
     }else{
@@ -96,9 +94,10 @@ function filtrarAuto(){
 }
 
 function noResultado(){
+    limpiarHTML()
     const noResultado = document.createElement("div")
     noResultado.classList.add("alerta","error")
-    noResultado.textContent = "No hay resultados, Intenta con otras opciones"
+    noResultado.textContent = "No hay resultados, intenta con otros terminos de busqueda"
     resultado.appendChild(noResultado)
 }
 
@@ -125,15 +124,16 @@ function filtrarMinimo(auto){
     }
     return auto
 }
+
 function filtrarMaximo(auto){
-    const {minimo} = datosBusqueda
-    if(minimo){
-        return auto.precio <= minimo
+    const {maximo} = datosBusqueda
+    if(maximo){
+        return auto.precio <= maximo
     }
     return auto
 }
 
-function filtarPuertas(auto){
+function filtrarPuertas(auto){
     const {puertas} = datosBusqueda
     if(puertas){
         return auto.puertas === puertas
@@ -156,3 +156,4 @@ function filtrarColor(auto){
     }
     return auto
 }
+
