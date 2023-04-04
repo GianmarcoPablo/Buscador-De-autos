@@ -12,27 +12,27 @@ const max = new Date().getFullYear()
 const min = max - 13
 
 const datosBusqueda = {
-    marca: "",
-    year: "",
-    minimo: "",
-    maximo: "",
-    puertas: "",
-    tranmision: "",
-    color: "",
+    marca : "",
+    year : "",
+    minimo : "",
+    maximo : "",
+    puertas : "",
+    tranmision : "",
+    color : "",
 }
 
 cargarEventListeners()
 function cargarEventListeners(){
     document.addEventListener("DOMContentLoaded",()=>{
+        llenarOpciones()
         mostrarAutos(autos)
-        llenarSelect()
-    })
-    year.addEventListener("change",(e)=>{
-        datosBusqueda.year = e.target.value
-        filtrarAuto()
     })
     marca.addEventListener("change",(e)=>{
         datosBusqueda.marca = e.target.value
+        filtrarAuto()
+    })
+    year.addEventListener("change",(e)=>{
+        datosBusqueda.year = e.target.value
         filtrarAuto()
     })
     minimo.addEventListener("change",(e)=>{
@@ -57,13 +57,22 @@ function cargarEventListeners(){
     })
 }
 
+function llenarOpciones(){
+    for(let i = max; i> min ;i--){
+        const option = document.createElement("option")
+        option.textContent = i
+        option.value = i
+        year.appendChild(option)
+    }
+}
+
 function mostrarAutos(autos){
     limpiarHTML()
     autos.forEach(auto=>{
-        const {marca,modelo, year, puertas, tranmision, precio, color} = auto
+        const {marca,modelo,year,precio,puertas,color,tranmision} = auto
         const autoHTML = document.createElement("p")
         autoHTML.textContent = `
-        ${marca} ${modelo} - ${year} - ${puertas} Puertas - tranmision: ${tranmision} - Precio: ${precio} - Color: ${color}
+            ${marca} ${modelo} - ${year} - ${puertas} Puertas - transmision: ${tranmision} - Precio: ${precio} - Color: ${color}
         `
         resultado.appendChild(autoHTML)
     })
@@ -75,45 +84,36 @@ function limpiarHTML(){
     }
 }
 
-
-function llenarSelect(){
-    for(let i = max; i >= min; i--){
-        const opcion = document.createElement("option")
-        opcion.textContent = i
-        opcion.value = i
-        year.appendChild(opcion)
-    }
-}
-
 function filtrarAuto(){
-    const resultado = autos.filter(filtrarYear).filter(filtrarMarca).filter(filtrarMinimo).filter(filtrarMaximo).filter(filtrarPuertas).filter(filtrarTranmision).filter(filtrarColor)
-    if(resultado.length){
-        mostrarAutos(resultado)
+    const resultado = autos.filter(filtrarMarca).filter(filtrarYear).filter(filtrarMinimo).filter(filtrarMaximo).filter(filtrarPuertas).filter(filtrarTranmision).filter(filtrarColor)
+    console.log(resultado)
+    if(resultado.length === 0){
+        noResultado()
     }else{
-        mostraError()
+        mostrarAutos(resultado)
     }
 }
 
-function mostraError(){
+function noResultado(){
     limpiarHTML()
-    const mensajeError = document.createElement("div")
-    mensajeError.classList.add("alerta","error")
-    mensajeError.textContent = "Auto no encontrado Prueba con otras opciones"
-    resultado.appendChild(mensajeError)
-}
-
-function filtrarYear(auto){
-    const {year} = datosBusqueda
-    if(year){
-        return auto.year === parseInt(year) 
-    }
-    return auto
+    const parrafo = document.createElement("p")
+    parrafo.textContent = "No se encontraron resultados pruebe con otras opciones"
+    parrafo.classList.add("alerta","error")
+    resultado.appendChild(parrafo)
 }
 
 function filtrarMarca(auto){
     const {marca} = datosBusqueda
     if(marca){
         return auto.marca === marca
+    }
+    return auto
+}
+
+function filtrarYear(auto){
+    const {year} = datosBusqueda
+    if(year){
+        return auto.year === parseInt(year)
     }
     return auto
 }
@@ -133,6 +133,7 @@ function filtrarMaximo(auto){
     }
     return auto
 }
+
 function filtrarPuertas(auto){
     const {puertas} = datosBusqueda
     if(puertas){
@@ -140,7 +141,6 @@ function filtrarPuertas(auto){
     }
     return auto
 }
-
 function filtrarTranmision(auto){
     const {tranmision} = datosBusqueda
     if(tranmision){
@@ -148,7 +148,6 @@ function filtrarTranmision(auto){
     }
     return auto
 }
-
 function filtrarColor(auto){
     const {color} = datosBusqueda
     if(color){
